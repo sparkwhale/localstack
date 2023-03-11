@@ -26,6 +26,8 @@ jobs:
           echo "Waiting for LocalStack startup..."        # Wait 30 seconds for the LocalStack container
           localstack wait -t 30                           # to become ready before timing out
           echo "Startup complete"
+          docker container ls
+          docker network ls
       - name: Create AWS resources
         run: |
           awslocal s3api create-bucket --bucket hey --region eu-central-1 --create-bucket-configuration LocationConstraint=eu-central-1

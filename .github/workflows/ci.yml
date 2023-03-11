@@ -28,6 +28,9 @@ jobs:
           echo "Startup complete"
           docker container ls
           docker network ls
+      - name: Start MockServer
+        run: |
+          docker run -d --rm -p 1080:1080 mockserver/mockserver
       - name: Create AWS resources
         run: |
           awslocal s3api create-bucket --bucket hey --region eu-central-1 --create-bucket-configuration LocationConstraint=eu-central-1
@@ -48,3 +51,23 @@ jobs:
           awslocal s3api list-buckets
           awslocal sqs list-queues
           awslocal dynamodb list-tables
+      - name: Run tests against MockServer
+        run: |
+          curl -X PUT 'localhost:1080/mockserver/expectation' \
+          -d '{
+            "httpRequest": {
+              "method": "GET",
+              "path": "/view/cart",
+              "queryStringParameters": {
+                "cartId": [
+                  "055CA455-1DF7-45BB-8535-4F83E7266092"
+                ]
+              },
+              "cookies": {
+                "session": "4930456C-C718-476F-971F-CB8E047AB349"
+              }
+            },
+            "httpResponse": {
+              "body": "some_response_body"
+            }
+          }'

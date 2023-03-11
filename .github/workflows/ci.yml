@@ -34,7 +34,7 @@ jobs:
         run: |
           docker run -d --rm -p 1080:1080 mockserver/mockserver
       - name: Run create aws resource script
-        run: ./create_aws_resources.sh
+        run: ./scripts/create_aws_resources.sh
         shell: bash
       - name: Run tests against LocalStack
         run: |

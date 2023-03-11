@@ -18,56 +18,26 @@ jobs:
           python-version: '3.9'
           cache: 'pip'
       - name: Start LocalStack
+        env:
+          DYNAMODB_IN_MEMORY: 1
+          ENFORCE_IAM: 0
+          PROVIDER_OVERRIDE_LAMBDA: asf
         run: |
           pip install --use-pep517 -r requirements.txt    # install LocalStack cli and awslocal
           docker pull localstack/localstack               # Make sure to pull the latest version of the image
           localstack start -d                             # Start LocalStack in the background
-          
+
           echo "Waiting for LocalStack startup..."        # Wait 30 seconds for the LocalStack container
           localstack wait -t 30                           # to become ready before timing out
           echo "Startup complete"
-          docker container ls
-          docker network ls
       - name: Start MockServer
         run: |
           docker run -d --rm -p 1080:1080 mockserver/mockserver
-      - name: Create AWS resources
-        run: |
-          awslocal s3api create-bucket --bucket hey --region eu-central-1 --create-bucket-configuration LocationConstraint=eu-central-1
-          awslocal sqs create-queue --queue-name hey-fetch
-          awslocal sqs create-queue --queue-name hey-events
-          awslocal sqs create-queue --queue-name hey-send
-          awslocal dynamodb create-table \
-            --table-name hey \
-            --attribute-definitions \
-                AttributeName=external_id,AttributeType=S \
-                AttributeName=category,AttributeType=S \
-            --key-schema \
-                AttributeName=external_id,KeyType=HASH \
-                AttributeName=category,KeyType=RANGE \
-            --provisioned-throughput ReadCapacityUnits=2,WriteCapacityUnits=2
+      - name: Run create aws resource script
+        run: ./create_aws_resources.sh
+        shell: bash
       - name: Run tests against LocalStack
         run: |
           awslocal s3api list-buckets
           awslocal sqs list-queues
           awslocal dynamodb list-tables
-      - name: Run tests against MockServer
-        run: |
-          curl -v -X PUT 'localhost:1080/mockserver/expectation' \
-          -d '{
-            "httpRequest": {
-              "method": "GET",
-              "path": "/view/cart",
-              "queryStringParameters": {
-                "cartId": [
-                  "055CA455-1DF7-45BB-8535-4F83E7266092"
-                ]
-              },
-              "cookies": {
-                "session": "4930456C-C718-476F-971F-CB8E047AB349"
-              }
-            },
-            "httpResponse": {
-              "body": "some_response_body"
-            }
-          }'

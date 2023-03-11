@@ -53,7 +53,7 @@ jobs:
           awslocal dynamodb list-tables
       - name: Run tests against MockServer
         run: |
-          curl -X PUT 'localhost:1080/mockserver/expectation' \
+          curl -v -X PUT 'localhost:1080/mockserver/expectation' \
           -d '{
             "httpRequest": {
               "method": "GET",

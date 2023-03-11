@@ -18,7 +18,7 @@ jobs:
           python-version: '3.9'
       - name: Start LocalStack
         run: |
-          pip install localstack awscli-local[ver1] # install LocalStack cli and awslocal
+          pip install localstack awscli-local       # install LocalStack cli and awslocal
           docker pull localstack/localstack         # Make sure to pull the latest version of the image
           localstack start -d                       # Start LocalStack in the background
           

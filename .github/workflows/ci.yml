@@ -1,4 +1,4 @@
-name: CI
+name: Create a local mock AWS and API environment
 
 on:
   push:
@@ -9,11 +9,13 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  mock:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
+      - name: Check out source repository
+        uses: actions/checkout@v3
+      - name: Set up Python environment
+        uses: actions/setup-python@v4
         with:
           python-version: '3.9'
           cache: 'pip'
@@ -33,11 +35,6 @@ jobs:
       - name: Start MockServer
         run: |
           docker run -d --rm -p 1080:1080 mockserver/mockserver
-      - name: Run create aws resource script
+      - name: Create AWS resources
         run: ./scripts/create_aws_resources.sh
         shell: bash
-      - name: Run tests against LocalStack
-        run: |
-          awslocal s3api list-buckets
-          awslocal sqs list-queues
-          awslocal dynamodb list-tables

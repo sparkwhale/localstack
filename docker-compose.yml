@@ -11,6 +11,17 @@ services:
     networks:
       crm-net:
         ipv4_address: "172.16.238.10"
+    healthcheck:
+      test:
+        - CMD
+        - bash
+        - -c
+        - awslocal dynamodb list-tables
+          && awslocal s3api ls
+          && awslocal sqs list-queues
+      interval: 5s
+      timeout: 10s
+      start_period: 10s
 
   mockserver:
     image: mockserver/mockserver:5.15.0

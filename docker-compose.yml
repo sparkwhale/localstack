@@ -4,6 +4,8 @@ services:
     ports:
       - "4566:4566"            # LocalStack Gateway
       - "4510-4559:4510-4559"  # external services port range
+    depends_on:
+      - mockserver
     links:
       - mockserver
     networks:
@@ -12,10 +14,11 @@ services:
     volumes:
       - /ready.d:/etc/localstack/init/ready.d
     healthcheck:
-      test: [ "CMD", "awslocal", "s3api", "wait", "bucket-exists", "--bucket", "crm" ]
-      interval: 5s
+      test: awslocal sqs list-queues && awslocal s3 ls && awslocal dynamodb list-tables
+      interval: 3s
       timeout: 10s
-      start_period: 10s
+    environment:
+      - AWS_DEFAULT_REGION=eu-west-1
 
   mockserver:
     image: mockserver/mockserver:5.15.0
@@ -24,9 +27,6 @@ services:
     networks:
       crm-net:
         ipv4_address: "172.16.238.20"
-    depends_on:
-      localstack:
-        condition: service_healthy
 
 networks:
   crm-net:

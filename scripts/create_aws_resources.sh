@@ -2,7 +2,7 @@
 
 export AWS_ACCESS_KEY_ID="test"
 export AWS_SECRET_ACCESS_KEY="test"
-export AWS_DEFAULT_REGION="us-central-1"
+export AWS_DEFAULT_REGION="eu-central-1"
 
 aws --endpoint-url=http://localhost:4566 s3api create-bucket --bucket hey --region eu-central-1 --create-bucket-configuration LocationConstraint=eu-central-1
 

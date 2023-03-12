@@ -17,12 +17,6 @@ jobs:
     steps:
       - name: Check out source repository
         uses: actions/checkout@v3
-      - name: Set up Python environment
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.9'
-      - name: Install awslocal
-        run: pip install --use-pep517 awscli-local
       - name: Start services
         run: docker compose up --detach
         shell: bash

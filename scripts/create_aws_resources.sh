@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 
-awslocal s3api create-bucket --bucket hey --region eu-central-1 --create-bucket-configuration LocationConstraint=eu-central-1
+aws --endpoint-url=http://localhost:4566 s3api create-bucket --bucket hey --region eu-central-1 --create-bucket-configuration LocationConstraint=eu-central-1
 
-awslocal sqs create-queue --queue-name hey-fetch
+aws --endpoint-url=http://localhost:4566 sqs create-queue --queue-name hey-fetch
 
-awslocal sqs create-queue --queue-name hey-events
+aws --endpoint-url=http://localhost:4566 sqs create-queue --queue-name hey-events
 
-awslocal sqs create-queue --queue-name hey-send
+aws --endpoint-url=http://localhost:4566 sqs create-queue --queue-name hey-send
 
-awslocal dynamodb create-table \
+aws --endpoint-url=http://localhost:4566 dynamodb create-table \
     --table-name hey \
     --attribute-definitions \
         AttributeName=external_id,AttributeType=S \

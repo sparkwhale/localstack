@@ -24,7 +24,7 @@ jobs:
       - name: Install awslocal
         run: pip install --use-pep517 awscli-local
       - name: Start services
-        run: docker compose up
+        run: docker compose up --detach
         shell: bash
       - name: Create AWS resources
         run: ./scripts/create_aws_resources.sh

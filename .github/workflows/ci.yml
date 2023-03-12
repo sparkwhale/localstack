@@ -18,5 +18,8 @@ jobs:
       - name: Check out source repository
         uses: actions/checkout@v3
       - name: Start services
-        run: docker compose up --detach
+        run: docker compose up --detach --verbose
+        shell: bash
+     - name: Check
+        run: aws --endpoint-url=http://localhost:4566 s3api ls
         shell: bash

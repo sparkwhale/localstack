@@ -20,5 +20,5 @@ jobs:
       - name: Start services
         run: |
           docker compose up --detach
-          aws --endpoint-url=http://localhost:4566 s3api ls
+          aws --endpoint-url=http://localhost:4566 s3 ls
         shell: bash

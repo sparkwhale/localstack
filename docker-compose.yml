@@ -11,6 +11,8 @@ services:
     networks:
       crm-net:
         ipv4_address: "172.16.238.10"
+    command: >
+      sh -c "/usr/local/bin/docker-entrypoint.sh && localstack wait -t 30 && echo "Startup complete"
 
   mockserver:
     image: mockserver/mockserver:5.15.0

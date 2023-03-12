@@ -12,7 +12,7 @@ services:
       crm-net:
         ipv4_address: "172.16.238.10"
     volumes:
-      - ready.d:/etc/localstack/init/ready.d
+      - /ready.d:/etc/localstack/init/ready.d
     healthcheck:
       test: [ "CMD", "awslocal", "s3api", "wait", "bucket-exists", "--bucket", "crm" ]
       interval: 5s

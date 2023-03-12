@@ -1,6 +1,7 @@
 services:
   localstack:
     image: localstack/localstack
+    detached: true
     ports:
       - "4566:4566"            # LocalStack Gateway
       - "4510-4559:4510-4559"  # external services port range
@@ -14,6 +15,7 @@ services:
 
   mockserver:
     image: mockserver/mockserver:5.15.0
+    detached: true
     ports:
       - "1080:1080"
     networks:

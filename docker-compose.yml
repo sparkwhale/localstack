@@ -1,0 +1,34 @@
+services:
+  localstack:
+    image: localstack/localstack
+    ports:
+      - "4566:4566"            # LocalStack Gateway
+      - "4510-4559:4510-4559"  # external services port range
+    volumes:
+      - "${LOCALSTACK_VOLUME_DIR:-./volume}:/var/lib/localstack"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    environment:
+      - PROVIDER_OVERRIDE_LAMBDA=asf
+    depends_on:
+      - mockserver
+    links:
+      - mockserver
+    networks:
+      crm-net:
+        ipv4_address: "172.16.238.10"
+
+  mockserver:
+    image: mockserver/mockserver:5.15.0
+    ports:
+      - "1080:1080"
+    networks:
+      crm-net:
+        ipv4_address: "172.16.238.20"
+
+networks:
+  crm-net:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.16.238.0/24

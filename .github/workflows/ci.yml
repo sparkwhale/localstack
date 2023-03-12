@@ -1,4 +1,6 @@
-name: Create a local mock AWS and API environment
+name: CI
+
+# Create a local mock AWS and API environment.
 
 on:
   push:
@@ -18,23 +20,11 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: '3.9'
-          cache: 'pip'
-      - name: Start LocalStack
-        env:
-          DYNAMODB_IN_MEMORY: 1
-          ENFORCE_IAM: 0
-          PROVIDER_OVERRIDE_LAMBDA: asf
-        run: |
-          pip install --use-pep517 -r requirements.txt    # install LocalStack cli and awslocal
-          docker pull localstack/localstack               # Make sure to pull the latest version of the image
-          localstack start -d                             # Start LocalStack in the background
-
-          echo "Waiting for LocalStack startup..."        # Wait 30 seconds for the LocalStack container
-          localstack wait -t 30                           # to become ready before timing out
-          echo "Startup complete"
-      - name: Start MockServer
-        run: |
-          docker run -d --rm -p 1080:1080 mockserver/mockserver
+      - name: Install awslocal
+        run: pip install --use-pep517 awscli-local
+      - name: Start services
+        run: docker compose up
+        shell: bash
       - name: Create AWS resources
         run: ./scripts/create_aws_resources.sh
         shell: bash

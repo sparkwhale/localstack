@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+sleep 30
+
 export AWS_ACCESS_KEY_ID="test"
 export AWS_SECRET_ACCESS_KEY="test"
 export AWS_DEFAULT_REGION="eu-central-1"

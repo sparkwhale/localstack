@@ -27,4 +27,4 @@ jobs:
           AWS_SECRET_ACCESS_KEY: test
           AWS_DEFAULT_REGION: eu-central-1
         shell: bash
-        run: aws --endpoint-url=http://localhost:4566 s3 ls
+        run: aws --endpoint-url=http://localhost:4566 dynamodb list-tables

@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
-awslocal s3api create-bucket --bucket crm
+awslocal s3api create-bucket --bucket crm --region eu-central-1 --create-bucket-configuration LocationConstraint=eu-central-1
 awslocal sqs create-queue --queue-name crm-fetch
 awslocal sqs create-queue --queue-name crm-events
 awslocal sqs create-queue --queue-name crm-send
 
 awslocal dynamodb create-table \
-    --table-name hey \
+    --table-name crm \
     --attribute-definitions \
         AttributeName=external_id,AttributeType=S \
         AttributeName=category,AttributeType=S \

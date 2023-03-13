@@ -23,9 +23,6 @@ services:
     networks:
       crm-net:
         ipv4_address: "172.16.238.20"
-    depends_on:
-      localstack:
-        condition: service_healthy
 
 networks:
   crm-net:

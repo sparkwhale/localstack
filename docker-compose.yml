@@ -1,5 +1,6 @@
 services:
   localstack:
+    container_name: crm-localstack
     image: localstack/localstack
     ports:
       - "4566:4566"            # LocalStack Gateway
@@ -17,6 +18,7 @@ services:
       - AWS_DEFAULT_REGION=eu-central-1
 
   mockserver:
+    container_name: crm-mockserver
     image: mockserver/mockserver:5.15.0
     ports:
       - "1080:1080"

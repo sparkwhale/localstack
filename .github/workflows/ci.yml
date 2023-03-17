@@ -11,20 +11,19 @@ on:
   workflow_dispatch:
 
 jobs:
-  mock:
+  mock-env:
     timeout-minutes: 5
     runs-on: ubuntu-latest
+    services:
+      localstack:
+        volumes:
+          - ./init-scripts:/etc/localstack/init/ready.d
+          - /var/run/docker.sock:/var/run/docker.sock
+        ports:
+          - 4566:4566
+      mockserver:
+        ports:
+          - 1080:1080
     steps:
-      - name: Check out source repository
-        uses: actions/checkout@v3
-      - name: Start services
-        run: |
-          docker compose up --detach --wait
-        shell: bash
-      - name: Check
-        env:
-          AWS_ACCESS_KEY_ID: test
-          AWS_SECRET_ACCESS_KEY: test
-          AWS_DEFAULT_REGION: eu-central-1
-        shell: bash
-        run: aws --endpoint-url=http://localhost:4566 dynamodb list-tables
+      - name: test comms
+        run: docker exec localstack curl mockserver:1080

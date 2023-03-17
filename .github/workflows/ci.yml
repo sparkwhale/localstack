@@ -18,7 +18,7 @@ jobs:
       localstack:
         image: localstack/localstack:latest
         volumes:
-          - ./init-scripts:/etc/localstack/init/ready.d
+          # - ./init-scripts:/etc/localstack/init/ready.d
           - /var/run/docker.sock:/var/run/docker.sock
         ports:
           - 4566:4566

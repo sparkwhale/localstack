@@ -1,0 +1,35 @@
+services:
+  localstack:
+    container_name: crm-localstack
+    image: localstack/localstack
+    ports:
+      - "4566:4566"            # LocalStack Gateway
+      - "4510-4559:4510-4559"  # external services port range
+    networks:
+      crm-net:
+        ipv4_address: "172.16.238.10"
+    volumes:
+      - ./init-scripts:/docker-entrypoint-initaws.d
+    healthcheck:
+      test: [ "CMD", "awslocal", "dynamodb", "wait", "table-exists", "--table-name", "crm" ]
+      interval: 3s
+      timeout: 10s
+    environment:
+      - AWS_DEFAULT_REGION=eu-central-1
+
+  mockserver:
+    container_name: crm-mockserver
+    image: mockserver/mockserver:5.15.0
+    ports:
+      - "1080:1080"
+    networks:
+      crm-net:
+        ipv4_address: "172.16.238.20"
+
+networks:
+  crm-net:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.16.238.0/24

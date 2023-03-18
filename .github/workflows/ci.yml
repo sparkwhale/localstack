@@ -30,4 +30,6 @@ jobs:
           - 1080:1080
     steps:
       - name: test comms
-        run: docker exec localstack curl mockserver:1080
+        run: |
+          docker exec localstack curl -I mockserver:1080
+          docker exec localstack curl -I localhost:1080

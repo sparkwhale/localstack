@@ -17,12 +17,14 @@ jobs:
     services:
       localstack:
         image: localstack/localstack:latest
+        options: --name localstack
         volumes:
           # - ./init-scripts:/etc/localstack/init/ready.d
           - /var/run/docker.sock:/var/run/docker.sock
         ports:
           - 4566:4566
       mockserver:
+        options: --name mockserver
         image: mockserver/mockserver:5.15.0
         ports:
           - 1080:1080

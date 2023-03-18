@@ -19,7 +19,7 @@ jobs:
         image: localstack/localstack:latest
         options: --name localstack
         volumes:
-          # - ./init-scripts:/etc/localstack/init/ready.d
+          - ./init-scripts:/etc/localstack/init/ready.d
           - /var/run/docker.sock:/var/run/docker.sock
         ports:
           - 4566:4566
@@ -29,5 +29,7 @@ jobs:
         ports:
           - 1080:1080
     steps:
-      - name: check if localstack is reachable
-        run: curl -s http://localhost:4566/health
+      - name: Check out source repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0

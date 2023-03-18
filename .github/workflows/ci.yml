@@ -14,6 +14,10 @@ jobs:
   mock-env:
     timeout-minutes: 5
     runs-on: ubuntu-latest
+    env:
+      AWS_SECRET_ACCESS_KEY: test
+      AWS_ACCESS_KEY_ID: test
+      AWS_DEFAULT_REGION: us-east-1
     services:
       localstack:
         image: localstack/localstack:latest
@@ -28,10 +32,6 @@ jobs:
         ports:
           - 1080:1080
     steps:
-      # - name: Check out source repository
-      #   uses: actions/checkout@v3
-      #   with:
-      #     fetch-depth: 0
       - name: Create AWS resources in localstack
         run: |
           aws --endpoint-url=http://localhost:4566 s3api create-bucket --bucket crm

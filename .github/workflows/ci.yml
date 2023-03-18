@@ -19,7 +19,6 @@ jobs:
         image: localstack/localstack:latest
         options: --name localstack
         volumes:
-          - ./init-scripts:/etc/localstack/init/ready.d
           - /var/run/docker.sock:/var/run/docker.sock
         ports:
           - 4566:4566
@@ -29,7 +28,23 @@ jobs:
         ports:
           - 1080:1080
     steps:
-      - name: Check out source repository
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
+      # - name: Check out source repository
+      #   uses: actions/checkout@v3
+      #   with:
+      #     fetch-depth: 0
+      - name: Create AWS resources in localstack
+        run: |
+          aws --endpoint-url=http://localhost:4566 s3api create-bucket --bucket crm
+          aws --endpoint-url=http://localhost:4566 sqs create-queue --queue-name crm-fetch
+          aws --endpoint-url=http://localhost:4566 sqs create-queue --queue-name crm-events
+          aws --endpoint-url=http://localhost:4566 sqs create-queue --queue-name crm-send
+          aws --endpoint-url=http://localhost:4566 dynamodb create-table \
+              --table-name crm \
+              --attribute-definitions \
+                  AttributeName=external_id,AttributeType=S \
+                  AttributeName=category,AttributeType=S \
+              --key-schema \
+                  AttributeName=external_id,KeyType=HASH \
+                  AttributeName=category,KeyType=RANGE \
+              --provisioned-throughput ReadCapacityUnits=2,WriteCapacityUnits=2
+

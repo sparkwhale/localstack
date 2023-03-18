@@ -29,7 +29,5 @@ jobs:
         ports:
           - 1080:1080
     steps:
-      - name: test via docker name
-        run: docker exec localstack curl -X 'PUT' 'http://mockserver:1080/mockserver/status'
-      - name: test via localhost
-        run: docker exec localstack curl -X 'PUT' 'http://localhost:1080/mockserver/status'
+      - name: check if localstack is reachable
+        run: curl -s http://localhost:4566/health
